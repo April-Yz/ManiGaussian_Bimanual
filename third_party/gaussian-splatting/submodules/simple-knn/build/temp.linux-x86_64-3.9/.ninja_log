@@ -1,0 +1,4 @@
+# ninja log v5
+0	16043	1729420249779808525	/data1/zjyang/program/peract_bimanual/third_part/gaussian-splatting/submodules/simple-knn/build/temp.linux-x86_64-3.9/simple_knn.o	e7ef0e35c3bb35a5
+0	22144	1729420255868921326	/data1/zjyang/program/peract_bimanual/third_part/gaussian-splatting/submodules/simple-knn/build/temp.linux-x86_64-3.9/ext.o	71924054beecb91
+1	68648	1729420302374761926	/data1/zjyang/program/peract_bimanual/third_part/gaussian-splatting/submodules/simple-knn/build/temp.linux-x86_64-3.9/spatial.o	3d7d65a670cae183
