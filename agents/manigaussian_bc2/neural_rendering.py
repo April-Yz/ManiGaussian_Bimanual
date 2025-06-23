@@ -102,6 +102,7 @@ class NeuralRenderer(nn.Module):
         self.use_dynamic_field = cfg.use_dynamic_field
         self.field_type = cfg.field_type
         self.mask_gen = cfg.mask_gen
+        self.hierarchical = cfg.hierarchical
         self.use_nerf_picture = cfg.use_nerf_picture
 
     def _embed_loss_fn(self, render_embed, gt_embed):
@@ -903,17 +904,23 @@ class NeuralRenderer(nn.Module):
                             next_render_mask = data['left_next']['novel_view']['mask_pred'] # 1 3 128 128 
                             next_loss_dyna_mask_left = self._mask_loss_fn(next_render_mask, next_gt_mask_label) 
                             # gen exclude
-                            next_left_mask_gen = next_loss_dyna_mask_left.permute(0, 2, 3, 1)  # 1 128 128 3   
-                            exclude_left_mask = self.generate_final_class_labels(next_left_mask_gen)
-                            exclude_left_mask = exclude_left_mask.unsqueeze(3).repeat(1, 1, 1, 3)
-
-                        result_right_image = next_gt_rgb * exclude_left_mask # + background_color * (~exclude_left_mask) # [1, 128, 128, 3] #
-
+                            if self.hierarchical:
+                                next_left_mask_gen = next_loss_dyna_mask_left.permute(0, 2, 3, 1)  # 1 128 128 3   
+                                exclude_left_mask = self.generate_final_class_labels(next_left_mask_gen)
+                                exclude_left_mask = exclude_left_mask.unsqueeze(3).repeat(1, 1, 1, 3)
+                        if self.hierarchical:   
+                            result_right_image = next_gt_rgb * exclude_left_mask # + background_color * (~exclude_left_mask) # [1, 128, 128, 3] #
+                        else:
+                            result_right_image = next_gt_rgb
+                            
                         #  4 RGB loss_dyna_leader leader 
                         if ('xyz_maps' in data['right_next']):
                             data['right_next'] = self.pts2render(data['right_next'], bg_color=self.bg_color)
                             next_render_rgb_right = data['right_next']['novel_view']['img_pred'].permute(0, 2, 3, 1) # [1,128, 128, 3]
-                            next_render_novel_mask = next_render_rgb_right #* exclude_left_mask  
+                            if self.hierarchical:
+                                next_render_novel_mask = next_render_rgb_right * exclude_left_mask  
+                            else:
+                                next_render_novel_mask = next_render_rgb_right #* exclude_left_mask
                             loss_dyna_leader = l2_loss(next_render_novel_mask, result_right_image)
                         
                         # 5 Mask loss_dyna_mask_next_right 
@@ -1230,7 +1237,7 @@ class NeuralRenderer(nn.Module):
                                 data['right_next'] = self.pts2render(data['right_next'], bg_color=self.bg_color)
                                 next_render_rgb_right = data['right_next']['novel_view']['img_pred'].permute(0, 2, 3, 1) # [1,128, 128, 3]                                
                     elif self.mask_gen == 'MASK_IN_NERF':   # LF +  train mask   
-                        data =self.pts2render_for_MASK_IN_NERF(data, bg_color=self.bg_mask)
+                        data =self.pts2render(data, bg_color=self.bg_mask)
                         if self.use_CEloss==1 or self.use_CEloss==3 or self.use_CEloss == 7 or self.use_CEloss == 21:
                             render_mask_novel = data['novel_view']['mask_pred'].permute(0, 2, 3, 1)
                             ## !! render_mask_novel = render_novel * render_mask_gtrgb
@@ -1306,18 +1313,19 @@ class NeuralRenderer(nn.Module):
                         if self.use_dynamic_field:
                             # 2 next Left RGB     
                             if ('xyz_maps' in data['left_next']):
-                                data['left_next'] = self.pts2render_for_MASK_IN_NERF(data['left_next'], bg_color=self.bg_color)
+                                data['left_next'] = self.pts2render(data['left_next'], bg_color=self.bg_color)
                                 next_render_novel = data['left_next']['novel_view']['img_pred'].permute(0, 2, 3, 1) # [1,3,128, 128] -> [1,128, 128, 3]
                             
                             # 3 next Left mask
-                                # data['left_next'] =self.pts2render_mask(data['left_next'], bg_color=self.bg_mask)
+                            if self.hierarchical:
+                                # data['left_next'] =self.pts2render_for_MASK_IN_NERF(data['left_next'], bg_color=self.bg_mask)
                                 # next_render_mask = data['left_next']['novel_view']['mask_pred'].permute(0, 2, 3, 1) # [1,3,128, 128] -> [1,128, 128, 3]
                                 # next_render_mask = self.generate_final_class_labels(next_render_mask)
                                 # next_render_mask = next_render_mask.unsqueeze(3).repeat(1, 1, 1, 3)
                                 # next_render_mask = next_render_novel * next_render_mask
                             
-                            data['left_next'] =self.pts2render_mask(data['left_next'], bg_color=self.bg_mask)
-                            data['left_next'] =self.pts2render_mask_gen(data['left_next'], bg_color=self.bg_mask)
+                            data['left_next'] =self.pts2render_for_MASK_IN_NERF(data['left_next'], bg_color=self.bg_mask)
+                            # data['left_next'] =self.pts2render_mask_gen(data['left_next'], bg_color=self.bg_mask)
                             if self.use_CEloss==1 or self.use_CEloss == 7 or self.use_CEloss == 21:
                                 next_render_mask = data['left_next']['novel_view']['mask_pred'].permute(0, 2, 3, 1) 
                                 next_render_mask = self.vis_labels(next_render_mask)

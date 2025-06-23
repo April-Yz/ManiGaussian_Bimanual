@@ -59,6 +59,7 @@ lambda_mask_right=0.5
 lambda_next_loss_mask=0.5
 
 mask_gen='MASK_IN_NERF' #'pre' # 'nonerf' #'gt' # 'pre' 'None'(BIMANUAL)
+hierarchical=True
 use_nerf_picture=True #False
 image_width=128 #256
 image_height=128 #256
@@ -99,6 +100,7 @@ CUDA_VISIBLE_DEVICES=${train_gpu}  QT_AUTO_SCREEN_SCALE_FACTOR=0 TORCH_DISTRIBUT
         method.neural_renderer.use_dynamic_field=${use_dynamic_field} \
         method.neural_renderer.field_type=${field_type} \
         method.neural_renderer.mask_gen=${mask_gen} \
+        method.neural_renderer.hierarchical=${hierarchical} \
         method.neural_renderer.dataset.mask_gt_rgb=${mask_gt_rgb} \
         method.neural_renderer.lambda_dyna_leader=${lambda_dyna_leader} \
         method.neural_renderer.lambda_mask=${lambda_mask} \

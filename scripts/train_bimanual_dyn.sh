@@ -43,7 +43,7 @@ episode_length=25
 save_freq=10000 
 camera_resolution="[256,256]"
 training_iterations=100001 
-field_type='LF_MASK_IN_NERF' #'LF' # 'bimanual'  
+field_type='bimanual' #'LF' # 'bimanual'  
 lambda_dyna=0.1
 lambda_reg=0.0
 render_freq=2000 
@@ -58,7 +58,7 @@ lambda_mask=0.01 # 0.4
 lambda_mask_right=0.5 
 lambda_next_loss_mask=0.5
 
-mask_gen='MASK_IN_NERF' #'pre' # 'nonerf' #'gt' # 'pre' 'None'(BIMANUAL)
+mask_gen='None' #'pre' # 'nonerf' #'gt' # 'pre' 'None'(BIMANUAL)
 use_nerf_picture=True #False
 image_width=128 #256
 image_height=128 #256

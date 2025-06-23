@@ -30,22 +30,22 @@ wandb login
 
 To train our ManiGaussian without deformation predictor, task-oriented Gaussian and hierarchical Gaussian world model
 ```
-bash scripts/train_replayallinone_LF_MASK_IN_NERF.sh ManiGaussian_BC2 0,1 12345 ${exp_name}
+bash scripts/train_bimanual.sh ManiGaussian_BC2 0,1 12345 ${exp_name}
 ```
 
 To train our ManiGaussian without task-oriented Gaussian and hierarchical Gaussian world, run:
 ```
-bash scripts/train_replayallinone_LF_MASK_IN_NERF.sh ManiGaussian_BC2 0,1 12345 ${exp_name}
+bash scripts/train_bimanual_dyn.sh ManiGaussian_BC2 0,1 12345 ${exp_name}
 ```
 
 To train our ManiGaussian without hierarchical Gaussian world, run:
 ```
-bash scripts/train_replayallinone_LF_MASK_IN_NERF.sh ManiGaussian_BC2 0,1 12345 ${exp_name}
+bash scripts/train_LF_MASK_IN_NERF.sh ManiGaussian_BC2 0,1 12345 ${exp_name}
 ```
 
 To train our vanilla ManiGaussian, run:
 ```
-bash scripts/train_LF_MASK_IN_NERF.sh ManiGaussian_BC2 0,1 12345 ${exp_name}
+bash scripts/train_LF_MASK_IN_NERF_HIER.sh ManiGaussian_BC2 0,1 12345 ${exp_name}
 ```
 
 ### Evaluation
