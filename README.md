@@ -90,4 +90,16 @@ This repository is released under the MIT license.
 Our code is built upon [ManiGaussian](https://github.com/GuanxingLu/ManiGaussian), [AnyBimanual](https://github.com/Tengbo-Yu/AnyBimanual), [Perceiver-Actor^2](https://github.com/markusgrotz/peract_bimanual), [PerAct](https://github.com/peract/peract), [RLBench](https://github.com/stepjam/RLBench), and [CLIP](https://github.com/openai/CLIP). We thank all these authors for their nicely open sourced code and their great contributions to the community.
 
 # 🔗 Citation
-Coming Soon.
+If you find this repository helpful, please consider citing:
+
+```
+@misc{yu2025manigaussiangeneralroboticbimanual,
+      title={ManiGaussian++: General Robotic Bimanual Manipulation with Hierarchical Gaussian World Model}, 
+      author={Tengbo Yu and Guanxing Lu and Zaijia Yang and Haoyuan Deng and Season Si Chen and Jiwen Lu and Wenbo Ding and Guoqiang Hu and Yansong Tang and Ziwei Wang},
+      year={2025},
+      eprint={2506.19842},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2506.19842}, 
+}
+```
